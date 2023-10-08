@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">EjemploClase</string>
+    <string name="btInserta" />
+    <string name="pistaNombre" />
+    <string name="lblCantidad" />
+    <string name="btCancelar" />
+    <string name="btGuardar" />
+    <string name="lblNombre" />
+</resources>

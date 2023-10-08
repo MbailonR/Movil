@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">Tutorial</string>
+    <string name="onCreate">onCreate</string>
+    <string name="onStart">onStart</string>
+    <string name="onRestart">onRestart</string>
+    <string name="onResume">onResume</string>
+    <string name="onPause">onPause</string>
+    <string name="onStop">onStop</string>
+    <string name="onDestroy">onDestroy</string>
+    <string name="boton">Saludar</string>
+    <string name="holaapp">Hola app</string>
+</resources>
