@@ -12,6 +12,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.example.listacompra.DB.DBHelper;
+import com.example.listacompra.Item.Producto;
+
 import java.io.Serializable;
 import java.util.Objects;
 
@@ -54,14 +57,21 @@ public class FormularioActivity extends AppCompatActivity implements Serializabl
 
         btMeter.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view){
-                Intent datosDevuelta = new Intent();
-                datosDevuelta.putExtra("Nombre", edNombre.getText().toString());
-                datosDevuelta.putExtra("Cantidad", edCantidad.getText().toString());
-                datosDevuelta.putExtra("Precio", edPrecio.getText().toString());
-                datosDevuelta.putExtra("pos", FormularioActivity.this.getIntent().getExtras().getInt("pos"));
-                FormularioActivity.this.setResult(Activity.RESULT_OK, datosDevuelta); //Envías el intent de vuelta
-                FormularioActivity.this.finish();
+            public void onClick(View view) {
+                try {
+                    DBHelper dbh= new DBHelper(FormularioActivity.this);
+                    Intent datosDevuelta = new Intent();
+                    datosDevuelta.putExtra("Nombre", edNombre.getText().toString());
+                    datosDevuelta.putExtra("Cantidad", edCantidad.getText().toString());
+                    datosDevuelta.putExtra("Precio", edPrecio.getText().toString());
+                    datosDevuelta.putExtra("pos", FormularioActivity.this.getIntent().getExtras().getInt("pos"));
+                    dbh.addProducto(edNombre.getText().toString().trim(),edCantidad.getText().toString().trim(),edPrecio.getText().toString().trim());
+                    FormularioActivity.this.setResult(Activity.RESULT_OK, datosDevuelta); //Envías el intent de vuelta
+                    FormularioActivity.this.finish();
+
+                } catch (Exception ex) {
+                    Toast.makeText(FormularioActivity.this, "AWWWWSHIT", Toast.LENGTH_SHORT).show();
+                }
             }
 
         });

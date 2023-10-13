@@ -1,4 +1,4 @@
-package com.example.listacompra;
+package com.example.listacompra.Item;
 
 public class Producto {
 

@@ -2,10 +2,14 @@ package com.example.listacompra;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.content.SharedPreferences;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.*;
+
+import com.example.listacompra.DB.DBHelper;
+import com.example.listacompra.Item.Producto;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -20,7 +24,9 @@ public class MainActivity extends Activity implements Serializable {
 
     public final int CODIGO_ENTRADA= 10;
 
-    public SharedPreferences prefs;
+    public DBHelper myDB;
+
+    ArrayList<String> pNombre, pCantidad, pPrecio;
 
     public ArrayList<Producto> items;
 
@@ -28,8 +34,9 @@ public class MainActivity extends Activity implements Serializable {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate( savedInstanceState );
         setContentView( R.layout.activity_main );
-
         this.items = new ArrayList<Producto>();
+        myDB = new DBHelper(MainActivity.this);
+
 
         Button btAdd = (Button) this.findViewById( R.id.btAdd );
         ListView lvItems = (ListView) this.findViewById( R.id.lvItems );
@@ -46,9 +53,9 @@ public class MainActivity extends Activity implements Serializable {
             @Override
             public boolean onItemLongClick(AdapterView<?> adapterView, View view, int pos, long l) {
                 if ( pos >= 0 ) {
+                    MainActivity.this.updateStatusEliminar(MainActivity.this.items.get(pos));
                     MainActivity.this.items.remove( pos );
                     MainActivity.this.itemsAdapter.notifyDataSetChanged();
-                    MainActivity.this.updateStatus();
                 }
                 return false;
             }
@@ -68,7 +75,15 @@ public class MainActivity extends Activity implements Serializable {
                 MainActivity.this.onAdd();
             }
         });
+
     }
+
+
+
+
+
+
+
 
     private void edit(Producto cambiar, int posicion) {
         Intent intent = new Intent(this, FormularioActivity.class);
@@ -77,7 +92,7 @@ public class MainActivity extends Activity implements Serializable {
         intent.putExtra("Precio",cambiar.getPrecio());
         intent.putExtra("pos",posicion);
         MainActivity.this.itemsAdapter.remove(cambiar);
-        MainActivity.this.updateStatus();
+        MainActivity.this.updateStatusEliminar(cambiar);
         startActivityForResult(intent, CODIGO_ENTRADA );
     }
 
@@ -96,14 +111,10 @@ public class MainActivity extends Activity implements Serializable {
                 String Cantidad = data.getStringExtra("Cantidad");
                 String Precio = data.getStringExtra("Precio");
                 Producto nuevo = new Producto(nombre, Integer.parseInt(Cantidad), Double.parseDouble(Precio));
+
                 MainActivity.this.itemsAdapter.add(nuevo); //Necesario o esto no ase na
                 MainActivity.this.updateStatus(nuevo); //Necesario para subir el contador
         }
-    }
-
-    private void updateStatus() {
-        TextView txtNum = (TextView) this.findViewById( R.id.lblNum );
-        txtNum.setText( Integer.toString( this.itemsAdapter.getCount() ) );
     }
 
     private void updateStatus(Producto nuevo) {
@@ -116,27 +127,12 @@ public class MainActivity extends Activity implements Serializable {
         double suma = nuevoNum + viejoNum;
         txtPrecio.setText(Double.toString(suma));
     }
-    public ArrayAdapter<Producto> getItemsAdapter() {
-        return itemsAdapter;
+    private void updateStatusEliminar(Producto producto) {
+        TextView txtPrecio =  this.findViewById(R.id.lblPrecio);
+        double nuevoNum = producto.getPrecio()*producto.getCantidad();
+        double viejoNum = Double.parseDouble((String) txtPrecio.getText());
+        double suma = nuevoNum - viejoNum;
+        txtPrecio.setText(Double.toString(suma));
     }
 
-    public void setItemsAdapter(ArrayAdapter<Producto> itemsAdapter) {
-        this.itemsAdapter = itemsAdapter;
-    }
-
-    public SharedPreferences getPrefs() {
-        return prefs;
-    }
-
-    public void setPrefs(SharedPreferences prefs) {
-        this.prefs = prefs;
-    }
-
-    public ArrayList<Producto> getItems() {
-        return items;
-    }
-
-    public void setItems(ArrayList<Producto> items) {
-        this.items = items;
-    }
 }
