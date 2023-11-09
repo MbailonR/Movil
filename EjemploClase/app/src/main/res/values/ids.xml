@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="ListaCompraV1" type="id" />
+    <item name="edNombre" type="id" />
+    <item name="lblCantidad" type="id" />
+    <item name="edCantidad" type="id" />
+    <item name="btCancelar" type="id" />
+    <item name="btGuardar" type="id" />
+    <item name="lblNombre" type="id" />
+    <item name="activity_item_edition" type="id" />
+</resources>
